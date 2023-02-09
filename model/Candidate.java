@@ -103,6 +103,7 @@ public abstract class Candidate {
 				if (input.length() != 10)
 					throw new DataFormatException();
 				this.setPhone(input);
+				isInvalidInput = false;
 			} catch (Exception e) {
 				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
 				isInvalidInput = true;

@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,8 @@ public class DBController {
 	private final String INSERT_CERTIFICATE = "INSERT INTO CERTIFICATE "
 			+ "(certificateID, certificateName, certificateRank, certificateDate, candidateID) "
 			+ "VALUES (?,?,?,?,?)";
+	
+	private final String SELECT_CANDIDATE_IF_EXIST = "SELECT * FROM CANDIDATE WHERE candidateID = ?";
 	
 	/**
 	 * Insert a candidate object to database
@@ -406,6 +409,381 @@ public class DBController {
 					})
 					.collect(Collectors.toList());
 			candidates.stream().forEach(o -> o.showInfo());
+		}
+		catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+	}
+	
+	public int candidateIDIsExist(String candidateID) {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+		try {
+			statement = connection.prepareStatement(SELECT_CANDIDATE_IF_EXIST);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				return resultSet.getInt("candidateType");
+			}
+			else {
+				return -1;
+			}
+		}
+		catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+		return -1;
+	}
+	
+	public void updateFullName(String newFullName, String candidateID) {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+
+		try {
+			statement = connection.prepareStatement(SELECT_CANDIDATE_IF_EXIST, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				resultSet.updateString("fullName", newFullName);
+				resultSet.updateRow();
+				System.out.println("Update fullName successfully");
+			}
+		} catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+		
+	}
+	public void updateBirthday(LocalDate newBirthDate, String candidateID) {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+		
+		try {
+			statement = connection.prepareStatement(SELECT_CANDIDATE_IF_EXIST, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				resultSet.updateDate("birthday", Date.valueOf(newBirthDate));
+				resultSet.updateRow();
+				System.out.println("birthday update successfully");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+	}
+	public void updatePhone(String newPhone, String candidateID) {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+		
+		try {
+			statement = connection.prepareStatement(SELECT_CANDIDATE_IF_EXIST, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				resultSet.updateString("phone", newPhone);
+				resultSet.updateRow();
+				System.out.println("phone update successfully");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+	}
+	public void updateEmail(String newEmail, String candidateID) {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+		
+		try {
+			statement = connection.prepareStatement(SELECT_CANDIDATE_IF_EXIST, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				resultSet.updateString("email", newEmail);
+				resultSet.updateRow();
+				System.out.println("email update successfully");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+	}
+	public void updateYearOfExperience(int newYear, String candidateID) {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+		
+		try {
+			statement = connection.prepareStatement(SELECT_CANDIDATE_IF_EXIST, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				resultSet.updateInt("yearOfExperience", newYear);
+				resultSet.updateRow();
+				System.out.println("yearOfExperience update successfully");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+	}
+	public void updateProSkill(String newProSkill, String candidateID) {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+		
+		try {
+			statement = connection.prepareStatement(SELECT_CANDIDATE_IF_EXIST, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				resultSet.updateString("proSkill", newProSkill);
+				resultSet.updateRow();
+				System.out.println("email update successfully");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+	}
+	public void updateGraduationDate(LocalDate newGraduationDate, String candidateID) {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+		
+		try {
+			statement = connection.prepareStatement(SELECT_CANDIDATE_IF_EXIST, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				resultSet.updateDate("graduationDate", Date.valueOf(newGraduationDate));
+				resultSet.updateRow();
+				System.out.println("graduationDate update successfully");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+	}
+	public void updateGraduationRank(String newGraduationRank, String candidateID) {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+		
+		try {
+			statement = connection.prepareStatement(SELECT_CANDIDATE_IF_EXIST, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				resultSet.updateString("graduationRank", newGraduationRank);
+				resultSet.updateRow();
+				System.out.println("graduationRank update successfully");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+	}
+	public void updateUniversityName(String newUniversityName, String candidateID) {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+		
+		try {
+			statement = connection.prepareStatement(SELECT_CANDIDATE_IF_EXIST, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				resultSet.updateString("universityName", newUniversityName);
+				resultSet.updateRow();
+				System.out.println("universityName update successfully");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+	}
+	public void updateMajor(String newMajor, String candidateID) {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+		
+		try {
+			statement = connection.prepareStatement(SELECT_CANDIDATE_IF_EXIST, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				resultSet.updateString("major", newMajor);
+				resultSet.updateRow();
+				System.out.println("email update successfully");
+			}
+		}
+		catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+	}
+	public void updateSemester(int newSemester, String candidateID) {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+		
+		try {
+			statement = connection.prepareStatement(SELECT_CANDIDATE_IF_EXIST, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				resultSet.updateInt("semester", newSemester);
+				resultSet.updateRow();
+				System.out.println("email update successfully");
+			}
 		}
 		catch (Exception e) {
 			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");

@@ -5,12 +5,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.zip.DataFormatException;
 
+import javax.security.auth.callback.ChoiceCallback;
+
 import controller.DBController;
 import model.Candidate;
 import model.Certificate;
 import model.Experience;
 import model.Fresher;
 import model.Intern;
+import util.GetDataUtil;
 
 public class Program {
 	private static DBController dbController = new DBController();
@@ -41,6 +44,7 @@ public class Program {
 					insert(scanner);
 					break;
 				case 2:
+					update(scanner);
 					break;
 				case 3:
 					dbController.showNonDuplicateNameCandidateList();
@@ -257,4 +261,212 @@ public class Program {
 
 		return "n";
 	}
+	
+	private static void update(Scanner scanner) {
+		String input;
+		System.out.print("Enter candidateID: ");
+		input = scanner.nextLine().trim();
+		int candidateType = dbController.candidateIDIsExist(input);
+		if (candidateType >= 0) {
+			if (candidateType == 0) {
+				int choice;
+				do {
+					System.out.println("Select field you want to update");
+					System.out.println("1. fullName");
+					System.out.println("2. birthday");
+					System.out.println("3. phone");
+					System.out.println("4. email");
+					System.out.println("5. yearOfExperience");
+					System.out.println("6. proSkill");
+					System.out.println("7. exit");
+					choice = getUpdateChoice(scanner, candidateType);
+					
+					switch (choice) {
+					case 1:
+						String newFullName = GetDataUtil.getFullName(scanner);
+						dbController.updateFullName(newFullName, input);
+						break;
+					case 2:
+						LocalDate newBirthday = GetDataUtil.getBirthday(scanner);
+						dbController.updateBirthday(newBirthday, input);
+						break;
+					case 3:
+						String newPhone = GetDataUtil.getPhone(scanner);
+						dbController.updatePhone(newPhone, input);
+						break;
+					case 4:
+						String newEmail = GetDataUtil.getEmail(scanner);
+						dbController.updateEmail(newEmail, input);
+						break;
+					case 5:
+						int newYear = GetDataUtil.getYearOfExperience(scanner);
+						dbController.updateYearOfExperience(newYear, input);
+						break;
+					case 6:
+						String newProSkill = GetDataUtil.getProSkill(scanner);
+						dbController.updateProSkill(newProSkill, input);
+						break;
+					case 7:
+						break;
+					}
+				} while (choice != 7);
+			} else if (candidateType == 1) {
+				int choice;
+				do {
+					System.out.println("Select field you want to update");
+					System.out.println("1. fullName");
+					System.out.println("2. birthday");
+					System.out.println("3. phone");
+					System.out.println("4. email");
+					System.out.println("5. graduationDate");
+					System.out.println("6. graduationRank");
+					System.out.println("7. universityName");
+					System.out.println("8. exit");
+					choice = getUpdateChoice(scanner, candidateType);
+					
+					switch (choice) {
+					case 1:
+						String newFullName = GetDataUtil.getFullName(scanner);
+						dbController.updateFullName(newFullName, input);
+						break;
+					case 2:
+						LocalDate newBirthday = GetDataUtil.getBirthday(scanner);
+						dbController.updateBirthday(newBirthday, input);
+						break;
+					case 3:
+						String newPhone = GetDataUtil.getPhone(scanner);
+						dbController.updatePhone(newPhone, input);
+						break;
+					case 4:
+						String newEmail = GetDataUtil.getEmail(scanner);
+						dbController.updateEmail(newEmail, input);
+						break;
+					case 5:
+						LocalDate newGraduationDate = GetDataUtil.getGraduationDate(scanner);
+						dbController.updateGraduationDate(newGraduationDate, input);
+						break;
+					case 6:
+						String newGraduationRank = GetDataUtil.getGraduationRank(scanner);
+						dbController.updateProSkill(newGraduationRank, input);
+						break;
+					case 7:
+						String newUniversityName = GetDataUtil.getUniversityName(scanner);
+						dbController.updateUniversityName(newUniversityName, input);
+						break;
+					case 8:
+						break;
+					}
+				} while (choice != 8);
+			} else {
+				int choice;
+				do {
+					System.out.println("Select field you want to update");
+					System.out.println("1. fullName");
+					System.out.println("2. birthday");
+					System.out.println("3. phone");
+					System.out.println("4. email");
+					System.out.println("5. major");
+					System.out.println("6. semester");
+					System.out.println("7. universityName");
+					System.out.println("8. exit");
+					choice = getUpdateChoice(scanner, candidateType);
+					
+					switch (choice) {
+					case 1:
+						String newFullName = GetDataUtil.getFullName(scanner);
+						dbController.updateFullName(newFullName, input);
+						break;
+					case 2:
+						LocalDate newBirthday = GetDataUtil.getBirthday(scanner);
+						dbController.updateBirthday(newBirthday, input);
+						break;
+					case 3:
+						String newPhone = GetDataUtil.getPhone(scanner);
+						dbController.updatePhone(newPhone, input);
+						break;
+					case 4:
+						String newEmail = GetDataUtil.getEmail(scanner);
+						dbController.updateEmail(newEmail, input);
+						break;
+					case 5:
+						String newMajor = GetDataUtil.getMajor(scanner);
+						dbController.updateMajor(newMajor, input);
+						break;
+					case 6:
+						int newSemester = GetDataUtil.getSemester(scanner);
+						dbController.updateSemester(newSemester, input);
+						break;
+					case 7:
+						String newUniversityName = GetDataUtil.getUniversityName(scanner);
+						dbController.updateUniversityName(newUniversityName, input);
+						break;
+					case 8:
+						break;
+					}
+				} while (choice != 8);
+			}
+		}
+		else {
+			System.out.println("Candidate ID does not exist");
+		}
+	}
+	private static int getUpdateChoice(Scanner scanner, int candidateType) {
+		boolean isInvalidInput;
+		String input;
+		int choice = 0;
+		if (candidateType == 0) {
+			do {
+				try {
+					System.out.print("Your choice: ");
+					input = scanner.nextLine().trim();
+					choice = Integer.parseInt(input);
+					
+					switch (choice) {
+						case 1:
+						case 2:
+						case 3:
+						case 4:
+						case 5:
+						case 6:
+						case 7:
+							isInvalidInput = false;
+							break;
+						default:
+							throw new NumberFormatException();
+					}
+				} catch (Exception e) {
+					System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+					isInvalidInput = true;
+				}
+			} while (isInvalidInput);
+		}
+		else {
+			do {
+				try {
+					System.out.print("Your choice: ");
+					input = scanner.nextLine().trim();
+					choice = Integer.parseInt(input);
+					
+					switch (choice) {
+						case 1:
+						case 2:
+						case 3:
+						case 4:
+						case 5:
+						case 6:
+						case 7:
+						case 8:
+							isInvalidInput = false;
+							break;
+						default:
+							throw new NumberFormatException();
+					}
+				} catch (Exception e) {
+					System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+					isInvalidInput = true;
+				}
+			} while (isInvalidInput);
+		}
+		return choice;
+	} 
 }
