@@ -299,7 +299,6 @@ public class DBController {
 					candidate.setEmail(candidateInfoResultSet.getString("email"));
 					((Experience) candidate).setYearOfExperience(candidateInfoResultSet.getInt("yearOfExperience"));
 					((Experience) candidate).setProSkill(candidateInfoResultSet.getString("proSkill"));
-					((Experience) candidate).showInfo();
 				}
 				else if (candidateType == 1) {
 					candidate = new Fresher();
@@ -312,7 +311,6 @@ public class DBController {
 					((Fresher) candidate).setGraduationDate(candidateInfoResultSet.getDate("graduationDate").toLocalDate());
 					((Fresher) candidate).setGraduationRank(candidateInfoResultSet.getString("graduationRank"));
 					((Fresher) candidate).setUniversityName(candidateInfoResultSet.getString("universityName"));
-					candidate.showInfo();
 				}
 				else {
 					candidate = new Intern();
@@ -325,7 +323,6 @@ public class DBController {
 					((Intern) candidate).setMajor(candidateInfoResultSet.getString("major"));
 					((Intern) candidate).setSemester(candidateInfoResultSet.getInt("semester"));
 					((Intern) candidate).setUniversityName(candidateInfoResultSet.getString("universityName"));
-					candidate.showInfo();
 				}
 				candidates.add(candidate);
 			}
