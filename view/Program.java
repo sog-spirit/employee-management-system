@@ -32,7 +32,8 @@ public class Program {
 			System.out.println("4. View candidate info");
 			System.out.println("5. View candidate name list with String implementation");
 			System.out.println("6. View candidate name list with StringBuffer implementation");
-			System.out.println("7. Exit program");
+			System.out.println("7. Sort candidate list ascending by candidate_type, if candidate_type equals sort descending by birth year");
+			System.out.println("8. Exit program");
 			choice = getMenuChoice(scanner);
 			
 			switch (choice) {
@@ -54,9 +55,12 @@ public class Program {
 					dbController.showCandidateFullnameListWithStringBuffer();
 					break;
 				case 7:
+					dbController.sortCandidateListByCandidateTypeAndBirthYear();
+					break;
+				case 8:
 					break;
 			}
-		} while (choice != 7);
+		} while (choice != 8);
 	}
 	
 	private static int getMenuChoice(Scanner scanner) {
@@ -75,6 +79,7 @@ public class Program {
 					case 5:
 					case 6:
 					case 7:
+					case 8:
 						isInvalidInput = false;
 						break;
 					default:

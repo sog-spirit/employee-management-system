@@ -7,7 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import model.Candidate;
 import model.Certificate;
@@ -327,6 +330,82 @@ public class DBController {
 				candidates.add(candidate);
 			}
 			candidates.stream().forEach((candidate) -> candidate.showInfo());
+		}
+		catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+	}
+	
+	public void sortCandidateListByCandidateTypeAndBirthYear() {
+		Connection connection;
+		connection = DBConnector.getConnection();
+		Statement statement = null;
+		List<Candidate> candidates = new LinkedList<>();
+		try {
+			statement = connection.createStatement();
+			ResultSet candidateInfoResultSet = statement.executeQuery(SELECT_CANDIDATE);
+			while (candidateInfoResultSet.next()) {
+				Candidate candidate;
+				int candidateType = candidateInfoResultSet.getInt("candidateType");
+				if (candidateType == 0) {
+					candidate = new Experience();
+					candidate.setCandidateID(candidateInfoResultSet.getString("candidateID"));
+					candidate.setCandidateType(candidateType);
+					candidate.setFullName(candidateInfoResultSet.getString("fullName"));
+					candidate.setBirthday(candidateInfoResultSet.getDate("birthday").toLocalDate());
+					candidate.setPhone(candidateInfoResultSet.getString("phone"));
+					candidate.setEmail(candidateInfoResultSet.getString("email"));
+					((Experience) candidate).setYearOfExperience(candidateInfoResultSet.getInt("yearOfExperience"));
+					((Experience) candidate).setProSkill(candidateInfoResultSet.getString("proSkill"));
+				}
+				else if (candidateType == 1) {
+					candidate = new Fresher();
+					candidate.setCandidateID(candidateInfoResultSet.getString("candidateID"));
+					candidate.setCandidateType(candidateType);
+					candidate.setFullName(candidateInfoResultSet.getString("fullName"));
+					candidate.setBirthday(candidateInfoResultSet.getDate("birthday").toLocalDate());
+					candidate.setPhone(candidateInfoResultSet.getString("phone"));
+					candidate.setEmail(candidateInfoResultSet.getString("email"));
+					((Fresher) candidate).setGraduationDate(candidateInfoResultSet.getDate("graduationDate").toLocalDate());
+					((Fresher) candidate).setGraduationRank(candidateInfoResultSet.getString("graduationRank"));
+					((Fresher) candidate).setUniversityName(candidateInfoResultSet.getString("universityName"));
+				}
+				else {
+					candidate = new Intern();
+					candidate.setCandidateID(candidateInfoResultSet.getString("candidateID"));
+					candidate.setCandidateType(candidateType);
+					candidate.setFullName(candidateInfoResultSet.getString("fullName"));
+					candidate.setBirthday(candidateInfoResultSet.getDate("birthday").toLocalDate());
+					candidate.setPhone(candidateInfoResultSet.getString("phone"));
+					candidate.setEmail(candidateInfoResultSet.getString("email"));
+					((Intern) candidate).setMajor(candidateInfoResultSet.getString("major"));
+					((Intern) candidate).setSemester(candidateInfoResultSet.getInt("semester"));
+					((Intern) candidate).setUniversityName(candidateInfoResultSet.getString("universityName"));
+				}
+				candidates.add(candidate);
+			}
+			candidates = candidates.stream()
+					.sorted((o1, o2) -> {
+						if (o1.getCandidateType() == o2.getCandidateType()) {
+							return o2.getBirthday().getYear() - o1.getBirthday().getYear();
+						}
+						else {
+							return o1.getCandidateType() - o2.getCandidateType();
+						}
+					})
+					.collect(Collectors.toList());
+			candidates.stream().forEach(o -> o.showInfo());
 		}
 		catch (Exception e) {
 			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
