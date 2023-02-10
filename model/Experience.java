@@ -3,9 +3,8 @@ package model;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
-import java.util.zip.DataFormatException;
 
-import javax.print.DocFlavor.INPUT_STREAM;
+import util.GetDataUtil;
 
 public class Experience extends Candidate {
 	private int yearOfExperience;
@@ -34,39 +33,8 @@ public class Experience extends Candidate {
 	public void getInfo(Scanner scanner) {
 		super.getInfo(scanner);
 		this.setCandidateType(0);
-		String input;
-		boolean isInvalidInput;
-
-		do {
-			try {
-				System.out.print("yearOfExperience: ");
-				input = scanner.nextLine().trim();
-				int year = Integer.parseInt(input);
-				if (year < 0)
-					throw new NumberFormatException();
-				this.setYearOfExperience(year);
-				isInvalidInput = false;
-			}
-			catch (Exception e) {
-				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
-				isInvalidInput = true;
-			}
-		} while (isInvalidInput);
-
-		do {
-			try {				
-				System.out.print("proSkill: ");
-				input = scanner.nextLine().trim();
-				if (input.length() < 0 || input.length() > 128)
-					throw new DataFormatException();
-				this.setProSkill(input);
-				isInvalidInput = false;
-			}
-			catch (Exception e) {
-				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
-				isInvalidInput = true;
-			}
-		} while (isInvalidInput);
+		this.setYearOfExperience(GetDataUtil.getYearOfExperience(scanner));
+		this.setProSkill(GetDataUtil.getProSkill(scanner));
 	}
 	
 	@Override

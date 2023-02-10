@@ -5,8 +5,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 import java.util.zip.DataFormatException;
 
-import javax.security.auth.callback.ChoiceCallback;
-
 import controller.DBController;
 import model.Candidate;
 import model.Certificate;

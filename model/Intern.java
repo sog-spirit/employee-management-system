@@ -3,7 +3,8 @@ package model;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
-import java.util.zip.DataFormatException;
+
+import util.GetDataUtil;
 
 public class Intern extends Candidate {
 	private String major;
@@ -35,54 +36,9 @@ public class Intern extends Candidate {
 	public void getInfo(Scanner scanner) {
 		super.getInfo(scanner);
 		this.setCandidateType(2);
-		String input;
-		boolean isInvalidInput;
-		
-		do {
-			try {
-				System.out.print("major: ");
-				input = scanner.nextLine().trim();
-				if (input.length() < 0 || input.length() > 256)
-					throw new DataFormatException();
-				this.setMajor(input);
-				isInvalidInput = false;
-			}
-			catch (Exception e) {
-				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
-				isInvalidInput = true;
-			}
-		} while (isInvalidInput);
-
-		do {
-			try {
-				System.out.print("semester: ");
-				input = scanner.nextLine().trim();
-				int semester = Integer.parseInt(input);
-				if (semester <= 0)
-					throw new DataFormatException();
-				this.setSemester(semester);
-				isInvalidInput = false;
-			}
-			catch (Exception e) {
-				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
-				isInvalidInput = true;
-			}
-		} while (isInvalidInput);
-
-		do {
-			try {
-				System.out.print("universityName: ");
-				input = scanner.nextLine().trim();
-				if (input.length() < 0 || input.length() > 256)
-					throw new DataFormatException();
-				this.setUniversityName(input);
-				isInvalidInput = false;
-			}
-			catch (Exception e) {
-				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
-				isInvalidInput = true;
-			}
-		} while (isInvalidInput);
+		this.setMajor(GetDataUtil.getMajor(scanner));
+		this.setSemester(GetDataUtil.getSemester(scanner));
+		this.setUniversityName(GetDataUtil.getUniversityName(scanner));
 	}
 	
 	@Override

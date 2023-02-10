@@ -13,6 +13,27 @@ import exception.EmailException;
 public class GetDataUtil {
 	private static final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
 
+	public static String getCandidateID(Scanner scanner) {
+		String input = null;
+		boolean isInvalidInput;
+		
+		do {
+			try {
+				System.out.print("candidateID: ");
+				input = scanner.nextLine().trim();
+				if (input.length() != 5)
+					throw new DataFormatException();
+				isInvalidInput = false;
+			}
+			catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+				isInvalidInput = true;
+			}
+		} while (isInvalidInput);
+		
+		return input;
+	}
+
 	public static String getFullName(Scanner scanner) {
 		String input = null;
 		boolean isInvalidInput;

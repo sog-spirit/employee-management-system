@@ -1,10 +1,10 @@
 package model;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
-import java.util.zip.DataFormatException;
+
+import util.GetDataUtil;
 
 public class Fresher extends Candidate {
 	private LocalDate graduationDate;
@@ -31,53 +31,9 @@ public class Fresher extends Candidate {
 	public void getInfo(Scanner scanner) {
 		super.getInfo(scanner);
 		this.setCandidateType(1);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-		String input;
-		boolean isInvalidInput;
-		
-		do {
-			try {
-				System.out.print("graduationDate: ");
-				input = scanner.nextLine().trim();
-				LocalDate tempLocalDate = LocalDate.parse(input, formatter);
-				this.setGraduationDate(tempLocalDate);
-				isInvalidInput = false;
-			}
-			catch (Exception e) {
-				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
-				isInvalidInput = true;
-			}
-		} while (isInvalidInput);
-
-		do {
-			try {
-				System.out.print("graduationRank: ");
-				input = scanner.nextLine().trim();
-				if (input.length() < 0 || input.length() > 50)
-					throw new DataFormatException();
-				this.setGraduationRank(input);
-				isInvalidInput = false;
-			}
-			catch (Exception e) {
-				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
-				isInvalidInput = true;
-			}
-		} while (isInvalidInput);
-
-		do {
-			try {
-				System.out.print("universityName: ");
-				input = scanner.nextLine().trim();
-				if (input.length() < 0 || input.length() > 256)
-					throw new DataFormatException();
-				this.setUniversityName(input);
-				isInvalidInput = false;
-			}
-			catch (Exception e) {
-				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
-				isInvalidInput = true;
-			}
-		} while (isInvalidInput);
+		this.setGraduationDate(GetDataUtil.getGraduationDate(scanner));
+		this.setGraduationRank(GetDataUtil.getGraduationRank(scanner));
+		this.setUniversityName(GetDataUtil.getUniversityName(scanner));
 	}
 	
 	@Override
