@@ -20,22 +20,14 @@ import model.Fresher;
 import model.Intern;
 
 public class DBController {
-	private final String INSERT_CADIDATE = "INSERT INTO CANDIDATE "
-			+ "(candidateID, candidateType, fullName, birthday, phone, email,"
-			+ "yearOfExperience, proSkill,"
-			+ "graduationDate, graduationRank, universityName,"
-			+ "major, semester) "
-			+ "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
 	
 	private final String SELECT_CANDIDATE_FULLNAME = "SELECT fullName FROM CANDIDATE";
 	
 	private final String SELECT_CANDIDATE = "SELECT * FROM CANDIDATE";
 	
-	private final String INSERT_CERTIFICATE = "INSERT INTO CERTIFICATE "
-			+ "(certificateID, certificateName, certificateRank, certificateDate, candidateID) "
-			+ "VALUES (?,?,?,?,?)";
-	
 	private final String SELECT_CANDIDATE_IF_EXIST = "SELECT * FROM CANDIDATE WHERE candidateID = ?";
+	
+	private final String SELECT_CERTIFICATE = "SELECT * FROM CERTIFICATE";
 	
 	/**
 	 * Insert a candidate object to database
@@ -49,47 +41,49 @@ public class DBController {
 		boolean check = false;
 		
 		try {
-			statement = connection.prepareStatement(INSERT_CADIDATE);
-			statement.setString(1, candidate.getCandidateID());
-			statement.setString(3, candidate.getFullName());
-			statement.setDate(4, Date.valueOf(candidate.getBirthday()));
-			statement.setString(5, candidate.getPhone());
-			statement.setString(6, candidate.getEmail());
+			statement = connection.prepareStatement(SELECT_CANDIDATE, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.moveToInsertRow();
+			resultSet.updateString("candidateID", candidate.getCandidateID());
+			resultSet.updateString("fullName", candidate.getFullName());
+			resultSet.updateDate("birthday", Date.valueOf(candidate.getBirthday()));
+			resultSet.updateString("phone", candidate.getPhone());
+			resultSet.updateString("email", candidate.getEmail());
 			
 			if (candidate instanceof Experience) {
 				Experience experience = (Experience) candidate;
-				statement.setInt(2, experience.getCandidateType());
-				statement.setInt(7, experience.getYearOfExperience());
-				statement.setString(8, experience.getProSkill());
-				statement.setString(9, null);
-				statement.setString(10, null);
-				statement.setString(11, null);
-				statement.setString(12, null);
-				statement.setString(13, null);
+				resultSet.updateInt("candidateType", experience.getCandidateType());
+				resultSet.updateInt("yearOfExperience", experience.getYearOfExperience());
+				resultSet.updateString("proSkill", experience.getProSkill());
+				resultSet.updateString("graduationDate", null);
+				resultSet.updateString("graduationRank", null);
+				resultSet.updateString("universityName", null);
+				resultSet.updateString("major", null);
+				resultSet.updateString("semester", null);
 			}
 			else if (candidate instanceof Fresher) {
 				Fresher fresher = (Fresher) candidate;
-				statement.setInt(2, fresher.getCandidateType());
-				statement.setString(7, null);
-				statement.setString(8, null);
-				statement.setDate(9, Date.valueOf(fresher.getGraduationDate()));
-				statement.setString(10, fresher.getGraduationRank());
-				statement.setString(11, fresher.getUniversityName());
-				statement.setString(12, null);
-				statement.setString(13, null);
+				resultSet.updateInt("candidateType", fresher.getCandidateType());
+				resultSet.updateString("yearOfExperience", null);
+				resultSet.updateString("proSkill", null);
+				resultSet.updateDate("graduationDate", Date.valueOf(fresher.getGraduationDate()));
+				resultSet.updateString("graduationRank", fresher.getGraduationRank());
+				resultSet.updateString("universityName", fresher.getUniversityName());
+				resultSet.updateString("major", null);
+				resultSet.updateString("semester", null);
 			}
 			else if (candidate instanceof Intern) {
 				Intern intern = (Intern) candidate;
-				statement.setInt(2, intern.getCandidateType());
-				statement.setString(7, null);
-				statement.setString(8, null);
-				statement.setString(9, null);
-				statement.setString(10, null);
-				statement.setString(11, intern.getUniversityName());
-				statement.setString(12, intern.getMajor());
-				statement.setInt(13, intern.getSemester());
+				resultSet.updateInt("candidateType", intern.getCandidateType());
+				resultSet.updateString("yearOfExperience", null);
+				resultSet.updateString("proSkill", null);
+				resultSet.updateString("graduationDate", null);
+				resultSet.updateString("graduationRank", null);
+				resultSet.updateString("universityName", intern.getUniversityName());
+				resultSet.updateString("major", intern.getMajor());
+				resultSet.updateInt("semester", intern.getSemester());
 			}
-			statement.executeUpdate();
+			resultSet.insertRow();
 			check = true;
 		}
 		catch (Exception e) {
@@ -121,13 +115,15 @@ public class DBController {
 		PreparedStatement statement = null;
 		boolean isSuccess;
 		try {
-			statement = connection.prepareStatement(INSERT_CERTIFICATE);
-			statement.setString(1, certificate.getCertificateID());
-			statement.setString(2, certificate.getCertificateName());
-			statement.setString(3, certificate.getCertificateRank());
-			statement.setDate(4, Date.valueOf(certificate.getCertificateDate()));
-			statement.setString(5, certificate.getCandidateID());
-			statement.executeUpdate();
+			statement = connection.prepareStatement(SELECT_CERTIFICATE, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			ResultSet resultSet = statement.executeQuery();
+			resultSet.moveToInsertRow();
+			resultSet.updateString("certificateID", certificate.getCertificateID());
+			resultSet.updateString("certificateName", certificate.getCertificateName());
+			resultSet.updateString("certificateRank", certificate.getCertificateRank());
+			resultSet.updateDate("certificateDate", Date.valueOf(certificate.getCertificateDate()));
+			resultSet.updateString("candidateID", certificate.getCandidateID());
+			resultSet.insertRow();
 			isSuccess = true;
 		}
 		catch (Exception e) {
