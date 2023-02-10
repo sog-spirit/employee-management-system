@@ -284,10 +284,10 @@ public class DBController {
 		Set<Candidate> candidates = new HashSet<>();
 		Connection connection;
 		connection = DBConnector.getConnection();
-		Statement statement = null;
+		PreparedStatement statement = null;
 		try {
-			statement = connection.createStatement();
-			ResultSet candidateInfoResultSet = statement.executeQuery(SELECT_CANDIDATE);
+			statement = connection.prepareStatement(SELECT_CANDIDATE);
+			ResultSet candidateInfoResultSet = statement.executeQuery();
 			while (candidateInfoResultSet.next()) {
 				Candidate candidate;
 				int candidateType = candidateInfoResultSet.getInt("candidateType");
@@ -349,11 +349,11 @@ public class DBController {
 	public void sortCandidateListByCandidateTypeAndBirthYear() {
 		Connection connection;
 		connection = DBConnector.getConnection();
-		Statement statement = null;
+		PreparedStatement statement = null;
 		List<Candidate> candidates = new LinkedList<>();
 		try {
-			statement = connection.createStatement();
-			ResultSet candidateInfoResultSet = statement.executeQuery(SELECT_CANDIDATE);
+			statement = connection.prepareStatement(SELECT_CANDIDATE);
+			ResultSet candidateInfoResultSet = statement.executeQuery();
 			while (candidateInfoResultSet.next()) {
 				Candidate candidate;
 				int candidateType = candidateInfoResultSet.getInt("candidateType");
