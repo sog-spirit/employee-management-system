@@ -51,7 +51,8 @@ public class Fresher extends Candidate {
 				+ "email=" + email + ","
 				+ "graduationDate=" + graduationDate + ","
 				+ "graduationRank=" + graduationRank + ","
-				+ "universityName=" + universityName
+				+ "universityName=" + universityName + ","
+				+ "certificates=" + certificates.toString()
 				+ "}";
 	}
 

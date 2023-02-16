@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,14 +22,51 @@ import model.Intern;
 
 public class DBController {
 	
-	private final String SELECT_CANDIDATE_FULLNAME = "SELECT fullName FROM CANDIDATE";
+	private static final String SELECT_CANDIDATE_FULLNAME = "SELECT fullName FROM CANDIDATE";
 	
-	private final String SELECT_CANDIDATE = "SELECT * FROM CANDIDATE";
+	private static final String SELECT_CANDIDATE = "SELECT * FROM CANDIDATE";
 	
-	private final String SELECT_CANDIDATE_IF_EXIST = "SELECT * FROM CANDIDATE WHERE candidateID = ?";
+	private static final String SELECT_CANDIDATE_IF_EXIST = "SELECT * FROM CANDIDATE WHERE candidateID = ?";
 	
-	private final String SELECT_CERTIFICATE = "SELECT * FROM CERTIFICATE";
+	private static final String SELECT_CERTIFICATE = "SELECT * FROM CERTIFICATE";
 	
+	private static final String sELECT_CERTIFICATE_FROM_CANDIDATE = "SELECT * FROM CERTIFICATE WHERE candidateID = ?";
+	
+	
+	public List<Certificate> getCertificatesFromCandidate(String candidateID) {
+		Connection connection = DBConnector.getConnection();
+		PreparedStatement statement = null;
+		List<Certificate> certificates = new ArrayList<>();
+		
+		try {
+			statement = connection.prepareStatement(sELECT_CERTIFICATE_FROM_CANDIDATE);
+			statement.setString(1, candidateID);
+			ResultSet resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+				Certificate certificate = new Certificate();
+				certificate.setCertificateID(resultSet.getString("certificateID"));
+				certificate.setCertificateName(resultSet.getString("certificateName"));
+				certificate.setCertificateRank(resultSet.getString("certificateRank"));
+				certificate.setCertificateDate(resultSet.getDate("certificateDate").toLocalDate());
+				certificate.setCandidateID(resultSet.getString("candidateID"));
+				certificates.add(certificate);
+			}
+		} catch (Exception e) {
+			System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+		} finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			} catch (Exception e) {
+				System.out.println("The system has encountered an unexpected problem, sincerely sorry !!!");
+			}
+		}
+		return certificates;
+	}
+
 	/**
 	 * Insert a candidate object to database
 	 * @param candidate Candidate
@@ -233,6 +271,7 @@ public class DBController {
 					candidate.setBirthday(candidateInfoResultSet.getDate("birthday").toLocalDate());
 					candidate.setPhone(candidateInfoResultSet.getString("phone"));
 					candidate.setEmail(candidateInfoResultSet.getString("email"));
+					candidate.setCertificates(getCertificatesFromCandidate(candidate.getCandidateID()));
 					((Experience) candidate).setYearOfExperience(candidateInfoResultSet.getInt("yearOfExperience"));
 					((Experience) candidate).setProSkill(candidateInfoResultSet.getString("proSkill"));
 					((Experience) candidate).showInfo();
@@ -245,6 +284,7 @@ public class DBController {
 					candidate.setBirthday(candidateInfoResultSet.getDate("birthday").toLocalDate());
 					candidate.setPhone(candidateInfoResultSet.getString("phone"));
 					candidate.setEmail(candidateInfoResultSet.getString("email"));
+					candidate.setCertificates(getCertificatesFromCandidate(candidate.getCandidateID()));
 					((Fresher) candidate).setGraduationDate(candidateInfoResultSet.getDate("graduationDate").toLocalDate());
 					((Fresher) candidate).setGraduationRank(candidateInfoResultSet.getString("graduationRank"));
 					((Fresher) candidate).setUniversityName(candidateInfoResultSet.getString("universityName"));
@@ -258,6 +298,7 @@ public class DBController {
 					candidate.setBirthday(candidateInfoResultSet.getDate("birthday").toLocalDate());
 					candidate.setPhone(candidateInfoResultSet.getString("phone"));
 					candidate.setEmail(candidateInfoResultSet.getString("email"));
+					candidate.setCertificates(getCertificatesFromCandidate(candidate.getCandidateID()));
 					((Intern) candidate).setMajor(candidateInfoResultSet.getString("major"));
 					((Intern) candidate).setSemester(candidateInfoResultSet.getInt("semester"));
 					((Intern) candidate).setUniversityName(candidateInfoResultSet.getString("universityName"));
@@ -299,6 +340,7 @@ public class DBController {
 					candidate.setBirthday(candidateInfoResultSet.getDate("birthday").toLocalDate());
 					candidate.setPhone(candidateInfoResultSet.getString("phone"));
 					candidate.setEmail(candidateInfoResultSet.getString("email"));
+					candidate.setCertificates(getCertificatesFromCandidate(candidate.getCandidateID()));
 					((Experience) candidate).setYearOfExperience(candidateInfoResultSet.getInt("yearOfExperience"));
 					((Experience) candidate).setProSkill(candidateInfoResultSet.getString("proSkill"));
 				}
@@ -310,6 +352,7 @@ public class DBController {
 					candidate.setBirthday(candidateInfoResultSet.getDate("birthday").toLocalDate());
 					candidate.setPhone(candidateInfoResultSet.getString("phone"));
 					candidate.setEmail(candidateInfoResultSet.getString("email"));
+					candidate.setCertificates(getCertificatesFromCandidate(candidate.getCandidateID()));
 					((Fresher) candidate).setGraduationDate(candidateInfoResultSet.getDate("graduationDate").toLocalDate());
 					((Fresher) candidate).setGraduationRank(candidateInfoResultSet.getString("graduationRank"));
 					((Fresher) candidate).setUniversityName(candidateInfoResultSet.getString("universityName"));
@@ -322,6 +365,7 @@ public class DBController {
 					candidate.setBirthday(candidateInfoResultSet.getDate("birthday").toLocalDate());
 					candidate.setPhone(candidateInfoResultSet.getString("phone"));
 					candidate.setEmail(candidateInfoResultSet.getString("email"));
+					candidate.setCertificates(getCertificatesFromCandidate(candidate.getCandidateID()));
 					((Intern) candidate).setMajor(candidateInfoResultSet.getString("major"));
 					((Intern) candidate).setSemester(candidateInfoResultSet.getInt("semester"));
 					((Intern) candidate).setUniversityName(candidateInfoResultSet.getString("universityName"));
@@ -365,6 +409,7 @@ public class DBController {
 					candidate.setBirthday(candidateInfoResultSet.getDate("birthday").toLocalDate());
 					candidate.setPhone(candidateInfoResultSet.getString("phone"));
 					candidate.setEmail(candidateInfoResultSet.getString("email"));
+					candidate.setCertificates(getCertificatesFromCandidate(candidate.getCandidateID()));
 					((Experience) candidate).setYearOfExperience(candidateInfoResultSet.getInt("yearOfExperience"));
 					((Experience) candidate).setProSkill(candidateInfoResultSet.getString("proSkill"));
 				}
@@ -376,6 +421,7 @@ public class DBController {
 					candidate.setBirthday(candidateInfoResultSet.getDate("birthday").toLocalDate());
 					candidate.setPhone(candidateInfoResultSet.getString("phone"));
 					candidate.setEmail(candidateInfoResultSet.getString("email"));
+					candidate.setCertificates(getCertificatesFromCandidate(candidate.getCandidateID()));
 					((Fresher) candidate).setGraduationDate(candidateInfoResultSet.getDate("graduationDate").toLocalDate());
 					((Fresher) candidate).setGraduationRank(candidateInfoResultSet.getString("graduationRank"));
 					((Fresher) candidate).setUniversityName(candidateInfoResultSet.getString("universityName"));
@@ -388,6 +434,7 @@ public class DBController {
 					candidate.setBirthday(candidateInfoResultSet.getDate("birthday").toLocalDate());
 					candidate.setPhone(candidateInfoResultSet.getString("phone"));
 					candidate.setEmail(candidateInfoResultSet.getString("email"));
+					candidate.setCertificates(getCertificatesFromCandidate(candidate.getCandidateID()));
 					((Intern) candidate).setMajor(candidateInfoResultSet.getString("major"));
 					((Intern) candidate).setSemester(candidateInfoResultSet.getInt("semester"));
 					((Intern) candidate).setUniversityName(candidateInfoResultSet.getString("universityName"));

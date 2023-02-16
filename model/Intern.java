@@ -51,7 +51,8 @@ public class Intern extends Candidate {
 				+ "email=" + email + ","
 				+ "major=" + major + ","
 				+ "semester=" + semester + ","
-				+ "universityName=" + universityName
+				+ "universityName=" + universityName + ","
+				+ "certificates=" + certificates.toString()
 				+ "}";
 	}
 

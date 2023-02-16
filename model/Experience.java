@@ -46,7 +46,8 @@ public class Experience extends Candidate {
 				+ "phone=" + phone + ","
 				+ "email=" + email + ","
 				+ "yearOfExperience=" + yearOfExperience + ","
-				+ "proSkill=" + proSkill
+				+ "proSkill=" + proSkill + ","
+				+ "certificates=" + certificates.toString()
 				+ "}";
 	}
 
